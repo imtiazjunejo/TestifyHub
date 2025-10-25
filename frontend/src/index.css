@@ -1,0 +1,30 @@
+@import "tailwindcss";
+/* @plugin "daisyui"; */
+ @plugin "daisyui" {
+   themes: light --default;
+ }
+
+
+/* Reset some default styles */
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100%;
+  overflow-x: hidden;
+  /* background-color: antiquewhite; */
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Fix for Firefox scrollbar */
+@-moz-document url-prefix() {
+  html {
+    scrollbar-width: thin;
+  }
+}
