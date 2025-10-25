@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTestStore } from '../store/useTestStore';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Trash2, Save } from 'lucide-react';
+import { Plus, Trash2, Save, BookOpen, Clock, Target, HelpCircle, CheckCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const CreateTest = () => {
@@ -98,173 +98,223 @@ const CreateTest = () => {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Create New Test</h1>
-
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Test Details */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4">Test Details</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">Title</label>
-              <input
-                type="text"
-                value={testData.title}
-                onChange={(e) => handleTestChange('title', e.target.value)}
-                className="w-full p-2 border rounded"
-                placeholder="Enter test title"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Subject</label>
-              <input
-                type="text"
-                value={testData.subject}
-                onChange={(e) => handleTestChange('subject', e.target.value)}
-                className="w-full p-2 border rounded"
-                placeholder="Enter subject"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Duration (minutes)</label>
-              <input
-                type="number"
-                value={testData.duration}
-                onChange={(e) => handleTestChange('duration', parseInt(e.target.value))}
-                className="w-full p-2 border rounded"
-                min="1"
-                required
-              />
-            </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-8 px-4">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mb-4 shadow-lg">
+            <BookOpen className="w-8 h-8 text-white" />
           </div>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">Create New Test</h1>
+          <p className="text-gray-600 text-lg">Design comprehensive assessments with ease</p>
         </div>
 
-        {/* Questions */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Questions</h2>
-            <button
-              type="button"
-              onClick={addNewQuestion}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center gap-2"
-            >
-              <Plus size={20} />
-              Add Question
-            </button>
-          </div>
-
-          <div className="space-y-6">
-            {questions.map((question, index) => (
-              <div key={index} className="border rounded-lg p-4">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-medium">Question {index + 1}</h3>
-                  {questions.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeQuestion(index)}
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      <Trash2 size={20} />
-                    </button>
-                  )}
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Question Type</label>
-                    <select
-                      value={question.type}
-                      onChange={(e) => handleQuestionChange(index, 'type', e.target.value)}
-                      className="w-full p-2 border rounded"
-                    >
-                      <option value="MCQ">Multiple Choice</option>
-                      <option value="True/False">True/False</option>
-                      <option value="Short Answer">Short Answer</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Marks</label>
-                    <input
-                      type="number"
-                      value={question.marks}
-                      onChange={(e) => handleQuestionChange(index, 'marks', parseInt(e.target.value))}
-                      className="w-full p-2 border rounded"
-                      min="1"
-                    />
-                  </div>
-                </div>
-
-                <div className="mb-4">
-                  <label className="block text-sm font-medium mb-2">Question Text</label>
-                  <textarea
-                    value={question.questionText}
-                    onChange={(e) => handleQuestionChange(index, 'questionText', e.target.value)}
-                    className="w-full p-2 border rounded"
-                    rows="3"
-                    placeholder="Enter your question"
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Test Details Card */}
+          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+            <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-4">
+              <div className="flex items-center gap-3">
+                <Target className="w-6 h-6 text-white" />
+                <h2 className="text-xl font-semibold text-white">Test Configuration</h2>
+              </div>
+            </div>
+            <div className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                    <BookOpen className="w-4 h-4" />
+                    Test Title
+                  </label>
+                  <input
+                    type="text"
+                    value={testData.title}
+                    onChange={(e) => handleTestChange('title', e.target.value)}
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-200 outline-none"
+                    placeholder="Enter test title"
                     required
                   />
                 </div>
-
-                {question.type === 'MCQ' && (
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium mb-2">Options</label>
-                    {question.options.map((option, optionIndex) => (
-                      <input
-                        key={optionIndex}
-                        type="text"
-                        value={option}
-                        onChange={(e) => handleOptionChange(index, optionIndex, e.target.value)}
-                        className="w-full p-2 border rounded mb-2"
-                        placeholder={`Option ${optionIndex + 1}`}
-                        required
-                      />
-                    ))}
-                  </div>
-                )}
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">Correct Answer</label>
-                  {question.type === 'True/False' ? (
-                    <select
-                      value={question.correctAnswer}
-                      onChange={(e) => handleQuestionChange(index, 'correctAnswer', e.target.value)}
-                      className="w-full p-2 border rounded"
-                      required
-                    >
-                      <option value="">Select answer</option>
-                      <option value="True">True</option>
-                      <option value="False">False</option>
-                    </select>
-                  ) : (
-                    <input
-                      type="text"
-                      value={question.correctAnswer}
-                      onChange={(e) => handleQuestionChange(index, 'correctAnswer', e.target.value)}
-                      className="w-full p-2 border rounded"
-                      placeholder="Enter correct answer"
-                      required
-                    />
-                  )}
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                    <Target className="w-4 h-4" />
+                    Subject
+                  </label>
+                  <input
+                    type="text"
+                    value={testData.subject}
+                    onChange={(e) => handleTestChange('subject', e.target.value)}
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-200 outline-none"
+                    placeholder="Enter subject"
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                    <Clock className="w-4 h-4" />
+                    Duration (minutes)
+                  </label>
+                  <input
+                    type="number"
+                    value={testData.duration}
+                    onChange={(e) => handleTestChange('duration', parseInt(e.target.value))}
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-200 outline-none"
+                    min="1"
+                    required
+                  />
                 </div>
               </div>
-            ))}
+            </div>
           </div>
-        </div>
 
-        <div className="flex justify-end">
-          <button
-            type="submit"
-            className="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700 flex items-center gap-2"
-          >
-            <Save size={20} />
-            Create Test
-          </button>
-        </div>
-      </form>
+          {/* Questions Section */}
+          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+            <div className="bg-gradient-to-r from-green-600 to-teal-600 px-6 py-4">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                  <HelpCircle className="w-6 h-6 text-white" />
+                  <h2 className="text-xl font-semibold text-white">Questions</h2>
+                  <span className="bg-white/20 text-white px-3 py-1 rounded-full text-sm font-medium">
+                    {questions.length} {questions.length === 1 ? 'Question' : 'Questions'}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={addNewQuestion}
+                  className="bg-white text-green-600 px-6 py-2 rounded-xl hover:bg-gray-50 transition-all duration-200 flex items-center gap-2 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                >
+                  <Plus size={20} />
+                  Add Question
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6">
+              <div className="space-y-6">
+                {questions.map((question, index) => (
+                  <div key={index} className="bg-gray-50 rounded-xl p-6 border-2 border-gray-100 hover:border-blue-200 transition-all duration-200">
+                    <div className="flex justify-between items-center mb-6">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-semibold text-sm">
+                          {index + 1}
+                        </div>
+                        <h3 className="text-lg font-semibold text-gray-900">Question {index + 1}</h3>
+                      </div>
+                      {questions.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removeQuestion(index)}
+                          className="text-red-500 hover:text-red-700 p-2 rounded-lg hover:bg-red-50 transition-all duration-200"
+                        >
+                          <Trash2 size={20} />
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                      <div className="space-y-2">
+                        <label className="block text-sm font-semibold text-gray-700">Question Type</label>
+                        <select
+                          value={question.type}
+                          onChange={(e) => handleQuestionChange(index, 'type', e.target.value)}
+                          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-200 outline-none bg-white"
+                        >
+                          <option value="MCQ">Multiple Choice</option>
+                          <option value="True/False">True/False</option>
+                          <option value="Short Answer">Short Answer</option>
+                        </select>
+                      </div>
+                      <div className="space-y-2">
+                        <label className="block text-sm font-semibold text-gray-700">Marks</label>
+                        <input
+                          type="number"
+                          value={question.marks}
+                          onChange={(e) => handleQuestionChange(index, 'marks', parseInt(e.target.value))}
+                          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-200 outline-none"
+                          min="1"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2 mb-6">
+                      <label className="block text-sm font-semibold text-gray-700">Question Text</label>
+                      <textarea
+                        value={question.questionText}
+                        onChange={(e) => handleQuestionChange(index, 'questionText', e.target.value)}
+                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-200 outline-none resize-none"
+                        rows="3"
+                        placeholder="Enter your question here..."
+                        required
+                      />
+                    </div>
+
+                    {question.type === 'MCQ' && (
+                      <div className="space-y-3 mb-6">
+                        <label className="block text-sm font-semibold text-gray-700">Answer Options</label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          {question.options.map((option, optionIndex) => (
+                            <div key={optionIndex} className="relative">
+                              <input
+                                type="text"
+                                value={option}
+                                onChange={(e) => handleOptionChange(index, optionIndex, e.target.value)}
+                                className="w-full px-4 py-3 pl-12 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-200 outline-none"
+                                placeholder={`Option ${optionIndex + 1}`}
+                                required
+                              />
+                              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center text-xs font-semibold text-gray-600">
+                                {String.fromCharCode(65 + optionIndex)}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="space-y-2">
+                      <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                        <CheckCircle className="w-4 h-4" />
+                        Correct Answer
+                      </label>
+                      {question.type === 'True/False' ? (
+                        <select
+                          value={question.correctAnswer}
+                          onChange={(e) => handleQuestionChange(index, 'correctAnswer', e.target.value)}
+                          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-200 outline-none bg-white"
+                          required
+                        >
+                          <option value="">Select correct answer</option>
+                          <option value="True">True</option>
+                          <option value="False">False</option>
+                        </select>
+                      ) : (
+                        <input
+                          type="text"
+                          value={question.correctAnswer}
+                          onChange={(e) => handleQuestionChange(index, 'correctAnswer', e.target.value)}
+                          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-200 outline-none"
+                          placeholder="Enter the correct answer"
+                          required
+                        />
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Submit Button */}
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              className="bg-gradient-to-r from-green-600 to-teal-600 text-white px-8 py-4 rounded-xl hover:from-green-700 hover:to-teal-700 transition-all duration-200 flex items-center gap-3 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+            >
+              <Save size={24} />
+              Create Test
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
