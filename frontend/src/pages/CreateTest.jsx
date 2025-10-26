@@ -1,12 +1,18 @@
 import { useState } from 'react';
 import { useTestStore } from '../store/useTestStore';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuthStore } from '../store/useAuthStore';
+import Sidebar from '../components/layout/Sidebar';
+import Header from '../components/layout/Header';
 import { Plus, Trash2, Save, BookOpen, Clock, Target, HelpCircle, CheckCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const CreateTest = () => {
   const { createTest, addQuestion } = useTestStore();
+  const { authUser, logout } = useAuthStore();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [testData, setTestData] = useState({
     title: '',
@@ -97,19 +103,35 @@ const CreateTest = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-8 px-4">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mb-4 shadow-lg">
-            <BookOpen className="w-8 h-8 text-white" />
-          </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Create New Test</h1>
-          <p className="text-gray-600 text-lg">Design comprehensive assessments with ease</p>
-        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-8">
+
+  return (
+    <div className="flex min-h-screen bg-gray-50">
+      {/* Mobile sidebar overlay */}
+      {sidebarOpen && (
+        <div className="fixed inset-0 z-40 lg:hidden">
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={() => setSidebarOpen(false)}></div>
+        </div>
+      )}
+
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+      <div className="flex-1 ml-0 lg:ml-64 flex flex-col min-h-screen">
+        <Header onMenuClick={() => setSidebarOpen(true)} title="Create New Test" />
+
+        <main className="flex-1 overflow-y-auto">
+          <div className="p-6">
+            <div className="max-w-6xl mx-auto">
+              {/* Header */}
+              <div className="text-center mb-8">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mb-4 shadow-lg">
+                  <BookOpen className="w-8 h-8 text-white" />
+                </div>
+                <h1 className="text-4xl font-bold text-gray-900 mb-2">Create New Test</h1>
+                <p className="text-gray-600 text-lg">Design comprehensive assessments with ease</p>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-8">
           {/* Test Details Card */}
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
             <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-4">
@@ -303,17 +325,20 @@ const CreateTest = () => {
             </div>
           </div>
 
-          {/* Submit Button */}
-          <div className="flex justify-center">
-            <button
-              type="submit"
-              className="bg-gradient-to-r from-green-600 to-teal-600 text-white px-8 py-4 rounded-xl hover:from-green-700 hover:to-teal-700 transition-all duration-200 flex items-center gap-3 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-            >
-              <Save size={24} />
-              Create Test
-            </button>
+                {/* Submit Button */}
+                <div className="flex justify-center">
+                  <button
+                    type="submit"
+                    className="bg-gradient-to-r from-green-600 to-teal-600 text-white px-8 py-4 rounded-xl hover:from-green-700 hover:to-teal-700 transition-all duration-200 flex items-center gap-3 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                  >
+                    <Save size={24} />
+                    Create Test
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-        </form>
+        </main>
       </div>
     </div>
   );

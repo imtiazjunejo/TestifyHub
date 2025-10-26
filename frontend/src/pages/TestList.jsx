@@ -1,16 +1,20 @@
 import { useEffect, useState } from 'react';
 import { useTestStore } from '../store/useTestStore';
 import { useAuthStore } from '../store/useAuthStore';
-import { Link } from 'react-router-dom';
-import { Edit, Trash2, Eye, Users, BarChart3 } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import Sidebar from '../components/layout/Sidebar';
+import Header from '../components/layout/Header';
+import { Edit, Trash2, Eye, Users, BarChart3, Plus, Award } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const TestList = () => {
-  const { authUser } = useAuthStore();
+  const { authUser, logout } = useAuthStore();
   const { tests, fetchTests, deleteTest, fetchTestResults } = useTestStore();
   const [selectedTest, setSelectedTest] = useState(null);
   const [showResults, setShowResults] = useState(false);
   const [testResults, setTestResults] = useState([]);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     fetchTests();
@@ -41,7 +45,7 @@ const TestList = () => {
   const renderEducatorView = () => (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">My Tests</h1>
+        <div></div>
         <Link
           to="/create-test"
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
@@ -102,7 +106,6 @@ const TestList = () => {
 
   const renderStudentView = () => (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Available Tests</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {tests.filter(test => test.isActive).map(test => (
@@ -128,50 +131,90 @@ const TestList = () => {
     </div>
   );
 
+
+
   if (showResults && selectedTest) {
     return (
-      <div className="p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">Test Results</h1>
-          <button
-            onClick={() => setShowResults(false)}
-            className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
-          >
-            Back to Tests
-          </button>
-        </div>
+      <div className="flex min-h-screen bg-gray-50">
+        {/* Mobile sidebar overlay */}
+        {sidebarOpen && (
+          <div className="fixed inset-0 z-40 lg:hidden">
+            <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={() => setSidebarOpen(false)}></div>
+          </div>
+        )}
 
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4">Student Results</h2>
-          {testResults.length === 0 ? (
-            <p className="text-gray-500">No results available yet.</p>
-          ) : (
-            <div className="space-y-4">
-              {testResults.map(result => (
-                <div key={result._id} className="border rounded-lg p-4">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <h3 className="font-semibold">{result.userId.name}</h3>
-                      <p className="text-gray-600">{result.userId.email}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-lg font-bold">{result.score}/{result.totalMarks}</p>
-                      <p className="text-sm text-gray-600">{result.percentage}%</p>
-                      <p className="text-sm text-gray-600">{result.timeTaken} min</p>
-                    </div>
-                  </div>
+        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+        <div className="flex-1 ml-0 lg:ml-64 flex flex-col min-h-screen">
+          <Header onMenuClick={() => setSidebarOpen(true)} title="Test Results" />
+
+          <main className="flex-1 overflow-y-auto">
+            <div className="p-6">
+              <div className="max-w-6xl mx-auto">
+                <div className="flex justify-between items-center mb-6">
+                  <div></div>
+                  <button
+                    onClick={() => setShowResults(false)}
+                    className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
+                  >
+                    Back to Tests
+                  </button>
                 </div>
-              ))}
+
+                <div className="bg-white p-6 rounded-lg shadow-md">
+                  <h2 className="text-xl font-semibold mb-4">Student Results</h2>
+                  {testResults.length === 0 ? (
+                    <p className="text-gray-500">No results available yet.</p>
+                  ) : (
+                    <div className="space-y-4">
+                      {testResults.map(result => (
+                        <div key={result._id} className="border rounded-lg p-4">
+                          <div className="flex justify-between items-center">
+                            <div>
+                              <h3 className="font-semibold">{result.userId.name}</h3>
+                              <p className="text-gray-600">{result.userId.email}</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-lg font-bold">{result.score}/{result.totalMarks}</p>
+                              <p className="text-sm text-gray-600">{result.percentage}%</p>
+                              <p className="text-sm text-gray-600">{result.timeTaken} min</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
-          )}
+          </main>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-6">
-      {authUser?.role === 'Educator' ? renderEducatorView() : renderStudentView()}
+    <div className="flex min-h-screen bg-gray-50">
+      {/* Mobile sidebar overlay */}
+      {sidebarOpen && (
+        <div className="fixed inset-0 z-40 lg:hidden">
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={() => setSidebarOpen(false)}></div>
+        </div>
+      )}
+
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+      <div className="flex-1 ml-0 lg:ml-64 flex flex-col min-h-screen">
+        <Header onMenuClick={() => setSidebarOpen(true)} title={authUser?.role === 'Educator' ? 'My Tests' : 'Available Tests'} />
+
+        <main className="flex-1 overflow-y-auto">
+          <div className="p-6">
+            <div className="max-w-6xl mx-auto">
+              {authUser?.role === 'Educator' ? renderEducatorView() : renderStudentView()}
+            </div>
+          </div>
+        </main>
+      </div>
     </div>
   );
 };
